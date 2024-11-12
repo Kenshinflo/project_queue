@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PostControllers;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -23,7 +26,7 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('home');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -34,5 +37,13 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::get('/users', [PostControllers::class,'index']);
+
+// Route::get('/login', function () {
+//     return Inertia::render('login');
+// })->name('login');
+Route::get('/login', [PostControllers::class, 'login']);
+Route::post('/login', [PostControllers::class, 'auth_login']);
 
 require __DIR__.'/auth.php';
